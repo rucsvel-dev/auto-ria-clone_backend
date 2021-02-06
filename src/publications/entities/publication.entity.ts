@@ -4,8 +4,8 @@ import {
 } from 'typeorm';
 import { IsBoolean, IsEmail, IsNumber, IsString } from 'class-validator';
 import { CoreEntity } from '../../common/entities/core.entity';
-import { Mark, region } from 'src/mark/entities/mark.entity';
-import { Model } from '../../car/entities/model.entity';
+import { Mark, region } from 'src/marks/entities/mark.entity';
+import { Model } from '../../cars/entities/model.entity';
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { type } from 'os';
 import { User } from '../../users/entities/user.entity';

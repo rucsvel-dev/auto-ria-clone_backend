@@ -3,9 +3,9 @@ import { GraphQLModule } from '@nestjs/graphql';
 import * as Joi from 'joi';
 
 import { UsersModule } from './users/users.module';
-import { PublicationModule } from './publication/publication.module';
-import { CarModule } from './car/car.module';
-import { MarkModule } from './mark/mark.module';
+import { PublicationsModule } from './publications/publications.module';
+import { CarsModule } from './cars/cars.module';
+import { MarksModule } from './marks/marks.module';
 import { AuthModule } from './auth/auth.module';
 import { CommonModule } from './common/common.module';
 import { ConfigModule } from '@nestjs/config';
@@ -13,10 +13,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users/entities/user.entity';
 import { ScheduleModule } from '@nestjs/schedule';
 import { Review } from './users/entities/review.entity';
-import { Publication } from './publication/entities/publication.entity';
-import { Mark } from './mark/entities/mark.entity';
-import { Car } from './car/entities/car.entity';
-import { Model } from './car/entities/model.entity';
+import { Publication } from './publications/entities/publication.entity';
+import { Mark } from './marks/entities/mark.entity';
+import { Car } from './cars/entities/car.entity';
+import { Model } from './cars/entities/model.entity';
 
 @Module({
   imports: [
@@ -67,9 +67,9 @@ import { Model } from './car/entities/model.entity';
     }),
     ScheduleModule.forRoot(),
     UsersModule,
-    PublicationModule,
-    CarModule,
-    MarkModule,
+    PublicationsModule,
+    CarsModule,
+    MarksModule,
     AuthModule,
     CommonModule,
   ],

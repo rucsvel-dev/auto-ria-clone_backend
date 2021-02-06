@@ -5,15 +5,14 @@ import {
 import { IsBoolean, IsEmail, IsNumber, IsString } from 'class-validator';
 import { CoreEntity } from '../../common/entities/core.entity';
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
-import { Mark } from '../../mark/entities/mark.entity';
-import { Review } from '../../users/entities/review.entity';
+import { Mark } from '../../marks/entities/mark.entity';
 import { Model } from './model.entity';
 
 @InputType('CarInputType', { isAbstract: true })
 @ObjectType()
 @Entity()
 export class Car extends CoreEntity {
-  @Field(type => Mark, { nullable: true })
+  @Field(type => Mark)
   @ManyToOne(
     type => Mark,
     mark => mark.cars
@@ -24,7 +23,11 @@ export class Car extends CoreEntity {
   @Field(type => String)
   name: string
 
-  @Field(type => [Model])
+  @Column()
+  @Field(type => Number)
+  yearOfCreation: number
+
+  @Field(type => [Model], {nullable: true})
   @OneToMany(
     type => Model,
     model => model.car

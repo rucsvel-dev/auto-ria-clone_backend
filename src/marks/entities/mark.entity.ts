@@ -5,9 +5,9 @@ import {
 import { IsBoolean, IsEmail, IsNumber, IsString } from 'class-validator';
 import { CoreEntity } from '../../common/entities/core.entity';
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
-import { Car } from '../../car/entities/car.entity';
-import { Model } from '../../car/entities/model.entity';
-import { Publication } from '../../publication/entities/publication.entity';
+import { Car } from '../../cars/entities/car.entity';
+import { Model } from '../../cars/entities/model.entity';
+import { Publication } from '../../publications/entities/publication.entity';
 
 export type region = 'Mykolaiv' | 'Kiev' | 'Odessa';
 

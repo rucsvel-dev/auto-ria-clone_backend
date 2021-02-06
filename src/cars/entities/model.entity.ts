@@ -6,7 +6,7 @@ import { IsBoolean, IsEmail, IsNumber, IsString } from 'class-validator';
 import { CoreEntity } from '../../common/entities/core.entity';
 import { Car } from './car.entity';
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
-import { Publication } from '../../publication/entities/publication.entity';
+import { Publication } from '../../publications/entities/publication.entity';
 
 @InputType('ModelInputType', { isAbstract: true })
 @ObjectType()

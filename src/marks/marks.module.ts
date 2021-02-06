@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
-import { MarkResolver } from './mark.resolver';
-import { MarkService } from './mark.service';
+import { MarksResolver } from './marks.resolver';
+import { MarksService } from './marks.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Mark } from './entities/mark.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Mark])],
-  providers: [MarkResolver, MarkService]
+  providers: [MarksResolver, MarksService]
 })
-export class MarkModule {}
+export class MarksModule {}

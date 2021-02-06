@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { IsBoolean, IsEmail, IsNumber, IsString } from 'class-validator';
 import { CoreEntity } from '../../common/entities/core.entity';
-import { Publication } from '../../publication/entities/publication.entity';
+import { Publication } from '../../publications/entities/publication.entity';
 import { Review } from './review.entity';
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 
