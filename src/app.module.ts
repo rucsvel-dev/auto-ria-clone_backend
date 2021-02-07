@@ -17,6 +17,7 @@ import { Publication } from './publications/entities/publication.entity';
 import { Mark } from './marks/entities/mark.entity';
 import { Car } from './cars/entities/car.entity';
 import { Model } from './cars/entities/model.entity';
+import { JwtModule } from './jwt/jwt.module';
 
 @Module({
   imports: [
@@ -59,11 +60,14 @@ import { Model } from './cars/entities/model.entity';
       installSubscriptionHandlers: true,
       autoSchemaFile: true,
       context: ({ req, connection }) => {
-        const TOKEN_KEY = 'x-jwt';
+        const TOKEN_KEY = 'jwt';
         return {
           token: req ? req.headers[TOKEN_KEY] : connection.context[TOKEN_KEY],
         };
       },
+    }),
+    JwtModule.forRoot({
+      privateKey: process.env.PRIVATE_KEY,
     }),
     ScheduleModule.forRoot(),
     UsersModule,
@@ -72,6 +76,7 @@ import { Model } from './cars/entities/model.entity';
     MarksModule,
     AuthModule,
     CommonModule,
+    JwtModule,
   ],
   controllers: [],
   providers: [],

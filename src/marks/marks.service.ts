@@ -9,11 +9,11 @@ import { GetAllMarksOutput } from './dtos/get-all-marks.dto';
 @Injectable()
 export class MarksService {
   constructor(
-    @InjectRepository(Mark) private readonly marks: Repository<Mark>
+    @InjectRepository(Mark) private readonly marksRepository: Repository<Mark>
   ) {}
   async getAllMarks(): Promise<GetAllMarksOutput>{
     try {
-      const marks = await this.marks.find();
+      const marks = await this.marksRepository.find();
       return { ok: true, marks }
     } catch (err){
       return { ok: false, error: "TODO" };
@@ -25,11 +25,13 @@ export class MarksService {
     markRegion
   }: CreateMarkDto): Promise<CreateMarkOutput> {
     try {
-      const exists = await this.marks.findOne({ markName });
+      const exists = await this.marksRepository.findOne({ markName });
       if (exists) {
         return { ok: false, error: 'There is a marks with that name already' };
       }
-      await this.marks.save(this.marks.create({ markName, markRegion }));
+      await this.marksRepository.save(
+        this.marksRepository.create({ markName, markRegion }),
+      );
       return { ok: true };
     } catch (err) {
       return { ok: false, error: "Couldn't create marks" };

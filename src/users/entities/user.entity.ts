@@ -1,4 +1,5 @@
 import {
+  BeforeInsert, BeforeUpdate,
   Column,
   Entity,
   JoinColumn,
@@ -7,10 +8,12 @@ import {
   OneToOne,
 } from 'typeorm';
 import { IsBoolean, IsEmail, IsNumber, IsString } from 'class-validator';
+import * as bcrypt from 'bcrypt';
 import { CoreEntity } from '../../common/entities/core.entity';
 import { Publication } from '../../publications/entities/publication.entity';
 import { Review } from './review.entity';
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
+import { InternalServerErrorException } from '@nestjs/common';
 
 @InputType('UserInputType', { isAbstract: true })
 @ObjectType()
@@ -29,15 +32,15 @@ export class User extends CoreEntity {
   email: string
 
   // mobile?:string
-  @Column({ default: '' })
+  @Column({ nullable: true })
   @Field(type => String)
-  googleId: string
+  googleId?: string
 
   @Column()
   @Field(type => String)
   password: string
 
-  @Column({ default: '' })
+  @Column({ nullable: true })
   @Field(type => String)
   photo?: string
 
@@ -69,4 +72,24 @@ export class User extends CoreEntity {
     review => review.from
   )
   writedReviews: Review[]
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  async hashPassword(): Promise<void> {
+    if (this.password) {
+      try {
+        this.password = await bcrypt.hash(this.password, 10);
+      } catch (err) {
+        throw new InternalServerErrorException();
+      }
+    }
+  }
+
+  async checkPassword(aPassword: string): Promise<boolean> {
+    try {
+      return await bcrypt.compare(aPassword, this.password);
+    } catch (err) {
+      throw new InternalServerErrorException();
+    }
+  }
 }

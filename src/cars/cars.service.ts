@@ -9,13 +9,13 @@ import { GetAllCarsOutput } from './dtos/get-all-cars.dto';
 @Injectable()
 export class CarsService {
   constructor(
-    @InjectRepository(Car) private readonly cars: Repository<Car>,
-    @InjectRepository(Mark) private readonly marks: Repository<Mark>,
+    @InjectRepository(Car) private readonly carsRepository: Repository<Car>,
+    @InjectRepository(Mark) private readonly marksRepository: Repository<Mark>,
   ) {}
 
   async getAllCars(): Promise<GetAllCarsOutput>{
     try {
-      const cars = await this.cars.find({relations: ['mark']});
+      const cars = await this.carsRepository.find({relations: ['mark']});
       return { ok: true, cars };
     } catch (err){
       return { ok: false, error: 'TODO' };
@@ -28,15 +28,15 @@ export class CarsService {
     markId,
   }: CreateCarDto): Promise<CreateCarOutput>{
     try {
-      const existsCar = await this.cars.findOne({ name });
-      const existsMark = await this.marks.findOne({ id: markId });
+      const existsCar = await this.carsRepository.findOne({ name });
+      const existsMark = await this.marksRepository.findOne({ id: markId });
       if (existsCar) {
         return { ok: false, error: 'There is a car with that name already' };
       }
       if (existsMark) {
-        const car = this.cars.create({ name, yearOfCreation });
+        const car = this.carsRepository.create({ name, yearOfCreation });
         car.mark = existsMark;
-        await this.cars.save(car);
+        await this.carsRepository.save(car);
       } else {
         return {
           ok: false,
