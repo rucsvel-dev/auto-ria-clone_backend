@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, RelationId } from 'typeorm';
 import { IsBoolean, IsEmail, IsNumber, IsString } from 'class-validator';
 import { CoreEntity } from '../../common/entities/core.entity';
 import { Country, Mark } from 'src/marks/entities/mark.entity';
@@ -61,4 +61,7 @@ export class Publication extends CoreEntity {
   @Field((type) => User)
   @ManyToOne((type) => User, (user) => user.publications)
   user: User;
+
+  @RelationId((publication: Publication) => publication.user)
+  ownerId: number;
 }

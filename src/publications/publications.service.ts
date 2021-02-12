@@ -9,6 +9,7 @@ import { CreatePublicationDto, CreatePublicationOutput } from './dtos/create-pub
 import { PUBLICATION_PRICE } from '../common/common.constants';
 import { Mark } from '../marks/entities/mark.entity';
 import { Car } from '../cars/entities/car.entity';
+import { DeletePublicationDto, DeletePublicationOutput } from './dtos/delete-publication.dto';
 
 @Injectable()
 export class PublicationsService {
@@ -25,6 +26,7 @@ export class PublicationsService {
     { carType }: SearchPublicationsDto,
   ): Promise<SearchPublicationsOutput> {
     try {
+      //TODO
       const publications = await this.publicationRepository.find({ where: { carType: carType } });
       if (user) {
         await this.searchRepository.save(this.searchRepository.create({ carType, user }));
@@ -60,6 +62,25 @@ export class PublicationsService {
       return { ok: true };
     } catch (err) {
       return { ok: true, error: 'TODO' };
+    }
+  }
+
+  async deletePublication(
+    user: User,
+    { publicationId }: DeletePublicationDto,
+  ): Promise<DeletePublicationOutput> {
+    try {
+      const publication = await this.publicationRepository.findOne({ id: publicationId });
+      if (!publication) {
+        return { ok: false, error: 'Not found' };
+      }
+      if (publication.ownerId !== user.id) {
+        return { ok: false, error: "Can't delete, you don't own it" };
+      }
+      await this.publicationRepository.delete(publication);
+      return { ok: true };
+    } catch (err) {
+      return { ok: false, error: 'Could not delete publication' };
     }
   }
 }

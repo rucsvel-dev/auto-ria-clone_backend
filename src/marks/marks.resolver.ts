@@ -5,6 +5,8 @@ import { CreateMarkDto, CreateMarkOutput } from './dtos/create-mark.dto';
 import { GetAllMarksOutput } from './dtos/get-all-marks.dto';
 import { UseGuards } from '@nestjs/common';
 import { AuthGuard } from '../auth/auth.guard';
+import { AuthUser } from '../auth/auth-user.decorator';
+import { DeleteMarkDto, DeleteMarkOutput } from './dtos/delete-mark.dto';
 
 @Resolver((of) => Mark)
 export class MarksResolver {
@@ -19,5 +21,10 @@ export class MarksResolver {
   @Mutation((returns) => CreateMarkOutput)
   async createMark(@Args('input') createMarkDto: CreateMarkDto): Promise<CreateMarkOutput> {
     return this.marksService.createMark(createMarkDto);
+  }
+
+  @Mutation((returns) => DeleteMarkOutput)
+  async deleteMark(@Args('input') deleteMarkDto: DeleteMarkDto): Promise<DeleteMarkOutput> {
+    return this.marksService.deleteMark(deleteMarkDto);
   }
 }

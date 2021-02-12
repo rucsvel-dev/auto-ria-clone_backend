@@ -6,6 +6,7 @@ import { AuthUser } from '../auth/auth-user.decorator';
 import { User } from '../users/entities/user.entity';
 import { CreatePublicationDto, CreatePublicationOutput } from './dtos/create-publication.dto';
 import { UseGuards } from '@nestjs/common';
+import { DeletePublicationDto, DeletePublicationOutput } from './dtos/delete-publication.dto';
 
 @Resolver((of) => Publication)
 export class PublicationsResolver {
@@ -24,7 +25,16 @@ export class PublicationsResolver {
   async createPublication(
     @AuthUser() user: User,
     @Args('input') createPublicationDto: CreatePublicationDto,
-  ): Promise<SearchPublicationsOutput> {
+  ): Promise<CreatePublicationOutput> {
     return this.publicationsService.createPublication(user, createPublicationDto);
+  }
+
+  // @UseGuards(AuthUser)
+  @Mutation((returns) => DeletePublicationOutput)
+  async deletePublication(
+    @AuthUser() user: User,
+    @Args('input') deletePublicationDto: DeletePublicationDto,
+  ): Promise<DeletePublicationOutput> {
+    return this.publicationsService.deletePublication(user, deletePublicationDto);
   }
 }
