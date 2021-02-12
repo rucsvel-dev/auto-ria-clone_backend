@@ -1,5 +1,6 @@
 import {
-  BeforeInsert, BeforeUpdate,
+  BeforeInsert,
+  BeforeUpdate,
   Column,
   Entity,
   JoinColumn,
@@ -14,64 +15,64 @@ import { Publication } from '../../publications/entities/publication.entity';
 import { Review } from './review.entity';
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
 import { InternalServerErrorException } from '@nestjs/common';
+import { Search } from '../../publications/entities/search.dto';
 
 @InputType('UserInputType', { isAbstract: true })
 @ObjectType()
 @Entity()
 export class User extends CoreEntity {
   @Column()
-  @Field(type => String)
-  firstName: string
+  @Field((type) => String)
+  firstName: string;
 
   @Column({ default: '' })
-  @Field(type => String)
-  lastName: string
+  @Field((type) => String)
+  lastName: string;
 
   @Column()
-  @Field(type => String)
-  email: string
+  @Field((type) => String)
+  email: string;
 
   // mobile?:string
   @Column({ nullable: true })
-  @Field(type => String)
-  googleId?: string
+  @Field((type) => String)
+  googleId?: string;
 
   @Column()
-  @Field(type => String)
-  password: string
+  @Field((type) => String)
+  password: string;
 
   @Column({ nullable: true })
-  @Field(type => String)
-  photo?: string
+  @Field((type) => String)
+  photo?: string;
 
   @Column({ default: 25 })
-  @Field(type => Boolean)
-  rating: boolean
+  @Field((type) => Number)
+  rating: number;
+
+  @Column({ default: 0 })
+  @Field((type) => Number)
+  balance: number;
 
   @Column({ default: true })
-  @Field(type => Boolean)
-  oneFreePublication: boolean
+  @Field((type) => Boolean)
+  oneFreePublication: boolean;
 
-  @Field(type => [Publication])
-  @OneToMany(
-    type => Publication,
-    publication => publication.user
-  )
-  publications: Publication[]
+  @Field((type) => [Publication])
+  @OneToMany((type) => Publication, (publication) => publication.user)
+  publications: Publication[];
 
-  @Field(type => [Review])
-  @OneToMany(
-    type => Review,
-    review => review.to
-  )
-  myReviews: Review[]
+  @Field((type) => [Review])
+  @OneToMany((type) => Review, (review) => review.to)
+  myReviews: Review[];
 
-  @Field(type => [Review])
-  @ManyToOne(
-    type => Review,
-    review => review.from
-  )
-  writedReviews: Review[]
+  @Field((type) => [Search])
+  @OneToMany((type) => Search, (search) => search.user)
+  searches: Search[];
+
+  @Field((type) => [Review])
+  @ManyToOne((type) => Review, (review) => review.from)
+  writedReviews: Review[];
 
   @BeforeInsert()
   @BeforeUpdate()

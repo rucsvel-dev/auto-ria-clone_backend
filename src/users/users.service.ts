@@ -31,9 +31,7 @@ export class UsersService {
       if (exists) {
         return { ok: false, error: 'User exists' };
       }
-      await this.usersRepository.save(
-        this.usersRepository.create(createUserDto),
-      );
+      await this.usersRepository.save(this.usersRepository.create(createUserDto));
       return { ok: true };
     } catch (err) {
       return { ok: false, error: 'TODO' };
@@ -55,7 +53,7 @@ export class UsersService {
 
   async findById(id: number) {
     try {
-      const user = await this.usersRepository.findOneOrFail({ id });
+      const user = await this.usersRepository.findOneOrFail({ id }, { relations: ['searches'] });
       return { ok: true, user };
     } catch (err) {
       return { ok: false, error: 'User not found' };

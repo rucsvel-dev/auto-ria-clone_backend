@@ -1,0 +1,2 @@
+export const CONFIG_OPTIONS = 'CONFIG_OPTIONS';
+export const PUBLICATION_PRICE = 20;

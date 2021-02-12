@@ -1,4 +1,4 @@
-import { Module, RequestMethod } from '@nestjs/common';
+import { MiddlewareConsumer, Module, RequestMethod } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import * as Joi from 'joi';
 
@@ -16,8 +16,9 @@ import { Review } from './users/entities/review.entity';
 import { Publication } from './publications/entities/publication.entity';
 import { Mark } from './marks/entities/mark.entity';
 import { Car } from './cars/entities/car.entity';
-import { Model } from './cars/entities/model.entity';
 import { JwtModule } from './jwt/jwt.module';
+import { Search } from './publications/entities/search.dto';
+import { JwtMiddleware } from './jwt/jwt.middleware';
 
 @Module({
   imports: [
@@ -26,15 +27,13 @@ import { JwtModule } from './jwt/jwt.module';
       envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.dev.test',
       ignoreEnvFile: process.env.NODE_ENV === 'prod',
       validationSchema: Joi.object({
-        NODE_ENV: Joi.string()
-          .valid('dev', 'prod', 'test')
-          .required(),
+        NODE_ENV: Joi.string().valid('dev', 'prod', 'test').required(),
         DB_HOST: Joi.string().required(),
         DB_PORT: Joi.string().required(),
         DB_USERNAME: Joi.string().required(),
         DB_PASSWORD: Joi.string().required(),
         DB_NAME: Joi.string().required(),
-        PRIVATE_KEY: Joi.string().required()
+        PRIVATE_KEY: Joi.string().required(),
       }),
     }),
     TypeOrmModule.forRoot({
@@ -45,16 +44,8 @@ import { JwtModule } from './jwt/jwt.module';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       synchronize: process.env.NODE_ENV !== 'prod',
-      logging:
-        process.env.NODE_ENV !== 'prod' && process.env.NODE_ENV !== 'test',
-      entities: [
-        User,
-        Review,
-        Publication,
-        Mark,
-        Car,
-        Model,
-      ],
+      logging: process.env.NODE_ENV !== 'prod' && process.env.NODE_ENV !== 'test',
+      entities: [User, Review, Publication, Mark, Car, Search],
     }),
     GraphQLModule.forRoot({
       installSubscriptionHandlers: true,
@@ -81,4 +72,8 @@ import { JwtModule } from './jwt/jwt.module';
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(JwtMiddleware).forRoutes({ path: '/graphql', method: RequestMethod.POST });
+  }
+}
