@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, RelationId } from 'typeorm';
 import { IsBoolean, IsEmail, IsNumber, IsString } from 'class-validator';
 import { CoreEntity } from '../../common/entities/core.entity';
 import { Field, InputType, ObjectType } from '@nestjs/graphql';
@@ -24,4 +24,7 @@ export class Car extends CoreEntity {
   @Field((type) => Publication)
   @OneToMany((type) => Publication, (publication) => publication.car)
   publications: Publication[];
+
+  @RelationId((car: Car) => car.mark)
+  markId: number;
 }

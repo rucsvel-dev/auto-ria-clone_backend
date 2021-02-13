@@ -3,10 +3,13 @@ import { Car } from '../entities/car.entity';
 import { PaginationDto, PaginationOutput } from '../../common/dtos/pagination.dto';
 
 @InputType()
-export class GetAllCarsDto extends PaginationDto {}
+export class GetAllCarsByMarkDto extends PaginationDto {
+  @Field((type) => Number)
+  markId: number;
+}
 
 @ObjectType()
-export class GetAllCarsOutput extends PaginationOutput {
-  @Field((type) => [Car], { nullable: true })
+export class GetAllCarsByMarkOutput extends PaginationOutput {
+  @Field((returns) => [Car], { nullable: true })
   cars?: Car[];
 }

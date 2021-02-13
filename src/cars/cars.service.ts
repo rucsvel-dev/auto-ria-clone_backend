@@ -4,13 +4,14 @@ import { Car } from './entities/car.entity';
 import { Repository } from 'typeorm';
 import { CreateCarDto, CreateCarOutput } from './dtos/create-car.dto';
 import { Mark } from '../marks/entities/mark.entity';
-import { GetAllCarsOutput } from './dtos/get-all-cars.dto';
+import { GetAllCarsDto, GetAllCarsOutput } from './dtos/get-all-cars.dto';
 import { User } from '../users/entities/user.entity';
 import {
   DeletePublicationDto,
   DeletePublicationOutput,
 } from '../publications/dtos/delete-publication.dto';
 import { DeleteCarDto, DeleteCarOutput } from './dtos/delete-car.dto';
+import { GetAllCarsByMarkDto, GetAllCarsByMarkOutput } from './dtos/get-all-cars-by-mark.dto';
 
 @Injectable()
 export class CarsService {
@@ -19,12 +20,42 @@ export class CarsService {
     @InjectRepository(Mark) private readonly marksRepository: Repository<Mark>,
   ) {}
 
-  async getAllCars(): Promise<GetAllCarsOutput> {
+  private PER_PAGE_RESULT = 10;
+
+  async getAllCars({ page }: GetAllCarsDto): Promise<GetAllCarsOutput> {
     try {
-      const cars = await this.carsRepository.find({ relations: ['mark'] });
-      return { ok: true, cars };
+      const [cars, carsCount] = await this.carsRepository.findAndCount({
+        skip: (page - 1) * this.PER_PAGE_RESULT,
+        take: this.PER_PAGE_RESULT,
+        relations: ['mark'],
+      });
+      return {
+        ok: true,
+        cars,
+        totalPages: Math.ceil(carsCount / this.PER_PAGE_RESULT),
+        totalResults: carsCount,
+      };
     } catch (err) {
-      return { ok: false, error: 'TODO' };
+      return { ok: false, error: 'Could not load cars' };
+    }
+  }
+
+  async getAllCarsByMark({ markId, page }: GetAllCarsByMarkDto): Promise<GetAllCarsByMarkOutput> {
+    try {
+      const [cars, carsCount] = await this.carsRepository.findAndCount({
+        where: { markId },
+        skip: (page - 1) * this.PER_PAGE_RESULT,
+        take: this.PER_PAGE_RESULT,
+        relations: ['mark'],
+      });
+      return {
+        ok: true,
+        cars,
+        totalPages: Math.ceil(carsCount / this.PER_PAGE_RESULT),
+        totalResults: carsCount,
+      };
+    } catch (err) {
+      return { ok: false, error: 'Could not load cars' };
     }
   }
 
